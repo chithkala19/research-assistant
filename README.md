@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🔬 AI-Powered Research Assistant
 
 A full-stack web application for students, researchers, and academicians to analyze, summarize, and synthesize research papers using Artificial Intelligence. Powered by **Google Gemini 1.5 Pro** with RAG (Retrieval-Augmented Generation) architecture.
@@ -145,3 +146,6 @@ research-assistant/
 ## 📜 License
 
 MIT License — see [LICENSE](LICENSE) for details.
+=======
+# research-assistant
+>>>>>>> a9c7915f88f88dea27ffe0ba4d14995cca914a47
