@@ -1,0 +1,90 @@
+version: '3.9'
+
+services:
+  # ── Backend (FastAPI + Uvicorn) ──────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: research-assistant-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-pro}
+      - SEMANTIC_SCHOLAR_API_KEY=${SEMANTIC_SCHOLAR_API_KEY:-}
+      - DATABASE_URL=sqlite:///./research_assistant.db
+      - CHROMA_PERSIST_DIR=./chroma_store
+      - UPLOAD_DIR=./uploads
+      - REDIS_URL=redis://redis:6379/0
+      - FRONTEND_ORIGIN=http://localhost:5173
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_chroma:/app/chroma_store
+      - backend_db:/app
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - research-net
+
+  # ── Frontend (React + Nginx) ─────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: research-assistant-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - research-net
+
+  # ── Redis (background task queue) ────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: research-assistant-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - research-net
+
+  # ── Celery Worker ────────────────────────────────────────────
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: research-assistant-celery
+    command: celery -A app.tasks.celery_tasks worker --loglevel=info
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-pro}
+      - DATABASE_URL=sqlite:///./research_assistant.db
+      - CHROMA_PERSIST_DIR=./chroma_store
+      - UPLOAD_DIR=./uploads
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_chroma:/app/chroma_store
+      - backend_db:/app
+    depends_on:
+      - redis
+      - backend
+    restart: unless-stopped
+    networks:
+      - research-net
+
+volumes:
+  backend_uploads:
+  backend_chroma:
+  backend_db:
+  redis_data:
+
+networks:
+  research-net:
+    driver: bridge

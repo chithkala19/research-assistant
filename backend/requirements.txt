@@ -1,0 +1,81 @@
+# ==========================
+# FastAPI
+# ==========================
+fastapi==0.111.0
+uvicorn[standard]==0.30.0
+python-multipart==0.0.9
+
+# ==========================
+# Database
+# ==========================
+sqlalchemy==2.0.30
+
+# ==========================
+# Environment
+# ==========================
+python-dotenv==1.0.1
+pydantic==2.12.5
+pydantic-settings==2.11.0
+
+# ==========================
+# Gemini AI
+# ==========================
+google-genai==2.12.1
+
+# ==========================
+# LangChain
+# ==========================
+langchain==0.2.5
+langchain-community==0.2.5
+langchain-core==0.2.9
+langchain-chroma==0.1.2
+langchain-google-genai==1.0.7
+langchain-huggingface==0.0.3
+
+# ==========================
+# Vector Database
+# ==========================
+chromadb==0.5.3
+
+# ==========================
+# Embeddings
+# ==========================
+sentence-transformers==3.0.1
+transformers==4.44.2
+torch==2.3.1
+huggingface-hub==0.24.6
+
+# ==========================
+# PDF Processing
+# ==========================
+PyMuPDF==1.24.5
+pdfplumber==0.11.1
+pdfminer.six
+pypdf
+
+# ==========================
+# HTTP
+# ==========================
+requests
+httpx
+aiofiles
+
+# ==========================
+# Data Processing
+# ==========================
+numpy
+pandas
+tqdm
+
+# ==========================
+# Background Tasks
+# ==========================
+celery==5.4.0
+redis==5.0.7
+
+# ==========================
+# Utilities
+# ==========================
+tenacity
+typing-extensions
+protobuf
